@@ -51,24 +51,26 @@ class Display:
                             (area.posX + 1) * self.CELL_SIZE,
                             (area.posY + 1) * self.CELL_SIZE,
                             fill='white')
-        if area.is_monster:
-            cv.create_image(area.posX * self.CELL_SIZE + 1,
-                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
-                            anchor=NW, image=self.monster_photo)
         if area.is_next_to_monster:
             cv.create_image(area.posX * self.CELL_SIZE + 1,
                             area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
                             anchor=NW, image=self.pooh_photo)
 
+        if area.is_monster:
+            cv.create_image(area.posX * self.CELL_SIZE + 1,
+                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
+                            anchor=NW, image=self.monster_photo)
+
+        if area.is_next_to_hole:
+            cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
+                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
+                            anchor=NW, image=self.wind_photo)
 
         if area.is_hole:
             cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
                             area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
                             anchor=NW, image=self.hole_photo)
-        if area.is_next_to_hole:
-            cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
-                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
-                            anchor=NW, image=self.wind_photo)
+
 
         cv.grid(row=area.posX, column=area.posY)#, padx=self.CELL_SIZE/2, pady=self.CELL_SIZE/2
 	
