@@ -17,8 +17,7 @@ class Area:
 		
 	def cristal_use(self):
 		self.is_monster = False
-		
-		
+
 		
 	def set_monster(self):
 		self.is_monster = True
@@ -37,3 +36,9 @@ class Area:
 		
 	def set_cristal(self):
 		self.is_cristal = True
+
+
+
+
+	def get_portal(self):
+		return self.is_portal

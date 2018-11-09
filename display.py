@@ -51,6 +51,7 @@ class Display:
                             (area.posX + 1) * self.CELL_SIZE,
                             (area.posY + 1) * self.CELL_SIZE,
                             fill='white')
+
         if area.is_next_to_monster:
             cv.create_image(area.posX * self.CELL_SIZE + 1,
                             area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
@@ -70,6 +71,16 @@ class Display:
             cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
                             area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
                             anchor=NW, image=self.hole_photo)
+
+        if area.is_portal:
+            cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
+                            area.posY * self.CELL_SIZE + 1,
+                            anchor=NW, image=self.portal_photo)
+
+        if area.is_cristal:
+            cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
+                            area.posY * self.CELL_SIZE + 1,
+                            anchor=NW, image=self.cristal_photo)
 
 
         cv.grid(row=area.posX, column=area.posY)#, padx=self.CELL_SIZE/2, pady=self.CELL_SIZE/2
