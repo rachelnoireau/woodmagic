@@ -4,8 +4,8 @@ from area import Area
 
 class Wood:
 	
-	PROB_MONSTER = 0.09
-	PROB_HOLE = 0.09
+	PROB_MONSTER = 0.1
+	PROB_HOLE = 0.1
 	PROB_CRISTAL = 0.05
 
 	def __init__(self,size):
@@ -31,8 +31,8 @@ class Wood:
 		return self.grid
 	
 	def situate_portal(self):
-		posx = random.randint(1,self.size-1)
-		posy = random.randint(1,self.size-1)
+		posx = random.randint(0, self.size-1)
+		posy = random.randint(0, self.size-1)
 		self.grid[posx][posy].set_portal()
 		
 	def generate_monster(self, posx, posy):

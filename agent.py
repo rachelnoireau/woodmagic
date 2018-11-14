@@ -18,8 +18,15 @@ class Agent:
         self.posY = 0
         self.nbr_dead = 0
         self.nbr_cristal = 0
+        self.level = 0    #the size 3*3 ici level 0
 
 
+    def next_level(self):
+        self.level += 1
+
+    def set_pos(self, x,y):
+        self.posX = x
+        self.posY = y
 
     def is_dead(self):
         self.nbr_dead += 1

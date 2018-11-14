@@ -39,6 +39,11 @@ class Area:
 
 
 
+	def get_monster(self):
+		return self.is_monster
+
+	def get_hole(self):
+		return self.is_hole
 
 	def get_portal(self):
 		return self.is_portal

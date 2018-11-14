@@ -2,19 +2,25 @@ from tkinter import *
 import sys
 import os
 
+from wood import Wood
 
 class Display:
 
-    CELL_SIZE = 50
+    #CELL_SIZE = 50
 
-    def __init__(self , size):
-        self.agent_pos = (0,0)
+    def __init__(self , agent, wood):
 
-        self.CELL_SIZE = 600/size
+        self.agent=agent
+        self.wood=wood
 
-        #self.room_changes_q = room_changes_q
-        #self.agent_move_q = agent_move_q
-        #self.disp_to_agent_q = disp_to_agent_q
+        self.agent_pos = self.agent.get_pos()
+
+        #self.grid=0
+        self.cv=0
+
+        self.CELL_SIZE = 650/(self.agent.level +3)
+
+        #self.room_area_q = room_area_q
 
         self.window = Tk()
         self.window.title("Magic Wood")
@@ -31,10 +37,18 @@ class Display:
         self.wind_photo = PhotoImage(file=self.resource_path("img/wind.png"))
 
 
+        self.add_grid(self.wood.get_grid())
+        self.create_button()
+        self.start_loop()
+
+
+
 		
     def add_grid(self, grid):
         self.window.grid_size()
-        new_canvas = Canvas(self.window, width=600, height=600, bd=0)
+        self.grid = grid
+        new_canvas = Canvas(self.window, width=650, height=650, bd=0)
+        self.cv=new_canvas
 
         for i in range(len(grid)):
             for j in range(len(grid[0])):
@@ -84,10 +98,67 @@ class Display:
 
 
         cv.grid(row=area.posX, column=area.posY)#, padx=self.CELL_SIZE/2, pady=self.CELL_SIZE/2
-	
+
+
+    def willDie(self):
+        print("il est mort?")
+        print(self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster())
+
+        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster():
+            return True
+            print("is Dead")
+        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_hole():
+            return True
+            print("is Dead")
+        return False
+
     def callAct(self):
-        print("prochaine action")
-	
+        self.agent.go_right()
+        #self.agent.do_action()
+
+        if not(self.agent_pos == self.agent.get_pos()):
+            self.agent_pos = self.agent.get_pos()
+
+        if self.willDie():
+            self.agent.is_dead()
+
+        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
+            self.agent.next_level()
+            self.agent.set_pos(0, 0)
+            self.wood = Wood(self.agent.level+3)
+            self.CELL_SIZE = 650/(self.agent.level + 3)
+
+
+        self.updateWindow()
+
+
+
+
+    def updateWindow(self):
+            #self.draw_agent()
+            print("update")
+            self.cv.delete("all")
+            self.add_grid(self.wood.get_grid())
+
+
+
+    '''
+    def move_agent(self, new_pos):
+        x_shift = (1 + self.CELL_SIZE * new_pos[0]) - (1 + self.CELL_SIZE * self.agent_pos[0])
+        y_shift = (1 + self.CELL_SIZE * new_pos[1]) - (1 + self.CELL_SIZE * self.agent_pos[1])
+
+        for cv in self.canvas_list:
+            cv.move(self.agent_image, x_shift, y_shift)
+        self.agent.set_pos(new_pos[0],new_pos[1])
+
+    def monster_killed(self, pos_monster):#TODO : modif ca
+        x_shift = (1 + self.CELL_SIZE * pos_monster[0]) - (1 + self.CELL_SIZE * self.agent_pos[0])
+        y_shift = (1 + self.CELL_SIZE * pos_monster[1]) - (1 + self.CELL_SIZE * self.agent_pos[1])
+
+        for cv in self.canvas_list:
+            cv.move(self.agent_image, x_shift, y_shift)
+    '''
+
     def create_button(self):
         Button(text ="next action", command = self.callAct).grid(sticky=S)
 
@@ -108,7 +179,6 @@ class Display:
         self.window.destroy()
 
     def start_loop(self):
-        #self.window.after(1, self.check_for_changes)
         self.window.mainloop()
 
     @staticmethod
