@@ -4,9 +4,8 @@ from area import Area
 
 class Wood:
 	
-	PROB_MONSTER = 0.1
-	PROB_HOLE = 0.1
-	PROB_CRISTAL = 0.05
+	PROB_MONSTER = 0.2
+	PROB_HOLE = 0.2
 
 	def __init__(self,size):
 		self.perf = 0;
@@ -16,15 +15,15 @@ class Wood:
 		self.situate_portal()
 		for i in range (0, self.size):
 			for j in range (0, self.size):
-				if not(i == 0 & j==0):
+				if not(i == 0 & j == 0):
 					if not(self.grid[i][j].get_portal()):
 						if not(self.generate_monster(i,j)):
 							self.generate_hole(i,j)
-					self.generate_cristal(i,j)
+
 		
 	
-	def cristal_taken(self, posx,posy):
-		self.grid[posx][posy].take_cristal()
+	#def cristal_taken(self, posx,posy):
+	#	self.grid[posx][posy].take_cristal()
 		
 	def use_cristal(self, posx, posy):
 		self.grid[posx][posy].cristal_use()
@@ -35,7 +34,10 @@ class Wood:
 	def situate_portal(self):
 		posx = random.randint(0, self.size-1)
 		posy = random.randint(0, self.size-1)
-		self.grid[posx][posy].set_portal()
+		if( posx == 0 & posy == 0 ):
+			self.situate_portal()
+		else:
+			self.grid[posx][posy].set_portal()
 		
 	def generate_monster(self, posx, posy):
 		if (random.random() < self.PROB_MONSTER):
@@ -63,9 +65,9 @@ class Wood:
 			if(posy<self.size-1):
 				self.grid[posx][posy+1].set_next_to_hole()
 
-	def generate_cristal(self, posx, posy):
-		if (random.random() < self.PROB_CRISTAL):
-			self.grid[posx][posy].set_cristal()
+	#def generate_cristal(self, posx, posy):
+	#	if (random.random() < self.PROB_CRISTAL):
+	#		self.grid[posx][posy].set_cristal()
 
 	def performance(area,agent, self):
 		if(area.is_monster == True or area.is_hole == True):

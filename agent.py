@@ -27,7 +27,7 @@ class Agent:
     def next_level(self):
         self.level += 1
 
-    def set_pos(self, x,y):
+    def set_pos(self, x, y):
         self.posX = x
         self.posY = y
 
@@ -36,6 +36,9 @@ class Agent:
 
     def get_pos(self):
         return (self.posX , self.posY)
+
+    def take_cristal(self):
+        self.nbr_cristal += 1
 
 
     def go_right(self): #juste pour tester

@@ -6,27 +6,25 @@ import time
 
 from wood import Wood
 
+
 class Display:
 
-    #CELL_SIZE = 50
-
-    def __init__(self , agent, wood):
-        self.agent=agent
-        self.wood=wood
+    def __init__(self, agent, wood):
+        self.agent = agent
+        self.wood = wood
 
         self.agent_pos = self.agent.get_pos()
 
-        self.cv=0
+        self.cv = 0
+        self.grid = 0
 
-        self.CELL_SIZE = 650/(self.agent.level +3)
+        self.CELL_SIZE = 650/(self.agent.level + 3)
 
         self.window = Tk()
         self.window.title("Magic Wood")
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.canvas_list = []
-        self.arrow_list = []
 
-        self.cristal_photo = PhotoImage(file=self.resource_path("img/cristal.png"))
+        #self.cristal_photo = PhotoImage(file=self.resource_path("img/cristal.png"))
         self.hero_photo = PhotoImage(file=self.resource_path("img/hero.png"))
         self.hole_photo = PhotoImage(file=self.resource_path("img/hole.png"))
         self.monster_photo = PhotoImage(file=self.resource_path("img/monster.png"))
@@ -37,8 +35,6 @@ class Display:
         self.add_grid(self.wood.get_grid())
         self.create_button()
         self.start_loop()
-
-
 
 		
     def add_grid(self, grid):
@@ -52,7 +48,6 @@ class Display:
                 self.draw_area(new_canvas, grid[j][i])
 
         self.draw_agent(new_canvas)
-        self.canvas_list.append(new_canvas)
 
 
 
@@ -87,19 +82,16 @@ class Display:
             cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
                             area.posY * self.CELL_SIZE + 1,
                             anchor=NW, image=self.portal_photo)
-
+        '''
         if area.is_cristal:
             cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
                             area.posY * self.CELL_SIZE + 1,
                             anchor=NW, image=self.cristal_photo)
+        '''
 
-
-        cv.grid(row=area.posX, column=area.posY)#, padx=self.CELL_SIZE/2, pady=self.CELL_SIZE/2
-
+        cv.grid(row=area.posX, column=area.posY)
 
     def willDie(self):
-        print(self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster())
-
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster():
             return True
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_hole():
@@ -107,8 +99,7 @@ class Display:
         return False
 
     def callAct(self):
-        self.agent.go_right()
-        #self.agent.do_action()
+        self.agent.go_right()#TODO : change to action
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
@@ -117,11 +108,9 @@ class Display:
 
         self.updateWindow()
         self.window.update()
-        #self.window.mainloop()
-        #print("continue")
+
+
         if self.willDie():
-            print("willdie")
-            print(self.agent.get_pos())
             self.agent.is_dead()
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
@@ -129,7 +118,14 @@ class Display:
             time.sleep(2)
             self.updateWindow()
 
+        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_is_next_to_monster:
+            # TODO add condition : hero decide use cristal
+            self.agent.take_cristal()
+            pos_direction_cristal=(0,0) #TODO : position where the heros think the monster is
+            self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].kill_monster()
 
+            time.sleep(2)
+            self.updateWindow()
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
             # TODO add condition : hero decide to take potal
@@ -137,6 +133,7 @@ class Display:
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
             self.wood = Wood(self.agent.level + 3)
+            self.grid = self.wood.get_grid()
             self.CELL_SIZE = 650 / (self.agent.level + 3)
 
             time.sleep(2)
@@ -145,29 +142,11 @@ class Display:
 
 
     def updateWindow(self):
-            print("update")
             self.cv.delete("all")
             self.add_grid(self.wood.get_grid())
+            self.grid = self.wood.get_grid()
 
 
-
-
-    '''
-    def move_agent(self, new_pos):
-        x_shift = (1 + self.CELL_SIZE * new_pos[0]) - (1 + self.CELL_SIZE * self.agent_pos[0])
-        y_shift = (1 + self.CELL_SIZE * new_pos[1]) - (1 + self.CELL_SIZE * self.agent_pos[1])
-
-        for cv in self.canvas_list:
-            cv.move(self.agent_image, x_shift, y_shift)
-        self.agent.set_pos(new_pos[0],new_pos[1])
-
-    def monster_killed(self, pos_monster):#TODO : modif ca
-        x_shift = (1 + self.CELL_SIZE * pos_monster[0]) - (1 + self.CELL_SIZE * self.agent_pos[0])
-        y_shift = (1 + self.CELL_SIZE * pos_monster[1]) - (1 + self.CELL_SIZE * self.agent_pos[1])
-
-        for cv in self.canvas_list:
-            cv.move(self.agent_image, x_shift, y_shift)
-    '''
 
     def create_button(self):
         Button(text ="next action", command = self.callAct).grid(sticky=S)
@@ -181,7 +160,7 @@ class Display:
         scale_h = (self.hero_photo.height() / self.CELL_SIZE)*2
         hero_photo = hero_photo.zoom(1).subsample(int(scale_w)+1, int(scale_h)+1)
         self.agent_image = cv.create_image(x_agent, y_agent, anchor=NW, image=self.hero_photo)
-        cv.grid(row=1, column=x_agent -1)
+        cv.grid(row=1, column=x_agent - 1)
 
 
 

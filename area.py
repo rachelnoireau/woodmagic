@@ -36,6 +36,10 @@ class Area:
 		
 	def set_cristal(self):
 		self.is_cristal = True
+		
+	def kill_monster(self):
+		self.is_monster = False
+
 
 
 
@@ -47,3 +51,6 @@ class Area:
 
 	def get_portal(self):
 		return self.is_portal
+
+	def get_is_next_to_monster(self):
+		return self.is_next_to_monster
