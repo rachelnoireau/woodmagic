@@ -2,6 +2,8 @@ from tkinter import *
 import sys
 import os
 
+import time
+
 from wood import Wood
 
 class Display:
@@ -9,18 +11,14 @@ class Display:
     #CELL_SIZE = 50
 
     def __init__(self , agent, wood):
-
         self.agent=agent
         self.wood=wood
 
         self.agent_pos = self.agent.get_pos()
 
-        #self.grid=0
         self.cv=0
 
         self.CELL_SIZE = 650/(self.agent.level +3)
-
-        #self.room_area_q = room_area_q
 
         self.window = Tk()
         self.window.title("Magic Wood")
@@ -36,7 +34,6 @@ class Display:
         self.portal_photo = PhotoImage(file=self.resource_path("img/portal.png"))
         self.wind_photo = PhotoImage(file=self.resource_path("img/wind.png"))
 
-
         self.add_grid(self.wood.get_grid())
         self.create_button()
         self.start_loop()
@@ -48,7 +45,7 @@ class Display:
         self.window.grid_size()
         self.grid = grid
         new_canvas = Canvas(self.window, width=650, height=650, bd=0)
-        self.cv=new_canvas
+        self.cv = new_canvas
 
         for i in range(len(grid)):
             for j in range(len(grid[0])):
@@ -101,15 +98,12 @@ class Display:
 
 
     def willDie(self):
-        print("il est mort?")
         print(self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster())
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster():
             return True
-            print("is Dead")
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_hole():
             return True
-            print("is Dead")
         return False
 
     def callAct(self):
@@ -119,26 +113,42 @@ class Display:
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
-        if self.willDie():
-            self.agent.is_dead()
-
-        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
-            self.agent.next_level()
-            self.agent.set_pos(0, 0)
-            self.wood = Wood(self.agent.level+3)
-            self.CELL_SIZE = 650/(self.agent.level + 3)
-
+        print(self.agent.get_pos())
 
         self.updateWindow()
+        self.window.update()
+        #self.window.mainloop()
+        #print("continue")
+        if self.willDie():
+            print("willdie")
+            print(self.agent.get_pos())
+            self.agent.is_dead()
+            self.agent.set_pos(0, 0)
+            self.agent_pos = self.agent.get_pos()
 
+            time.sleep(2)
+            self.updateWindow()
+
+
+
+        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
+            # TODO add condition : hero decide to take potal
+            self.agent.next_level()
+            self.agent.set_pos(0, 0)
+            self.agent_pos = self.agent.get_pos()
+            self.wood = Wood(self.agent.level + 3)
+            self.CELL_SIZE = 650 / (self.agent.level + 3)
+
+            time.sleep(2)
+            self.updateWindow()
 
 
 
     def updateWindow(self):
-            #self.draw_agent()
             print("update")
             self.cv.delete("all")
             self.add_grid(self.wood.get_grid())
+
 
 
 

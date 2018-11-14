@@ -16,10 +16,11 @@ class Wood:
 		self.situate_portal()
 		for i in range (0, self.size):
 			for j in range (0, self.size):
-				if not(self.grid[i][j].get_portal()):
-					if not(self.generate_monster(i,j)):
-						self.generate_hole(i,j)
-				self.generate_cristal(i,j)
+				if not(i == 0 & j==0):
+					if not(self.grid[i][j].get_portal()):
+						if not(self.generate_monster(i,j)):
+							self.generate_hole(i,j)
+					self.generate_cristal(i,j)
 		
 	
 	def cristal_taken(self, posx,posy):
