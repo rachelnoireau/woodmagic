@@ -9,6 +9,7 @@ class Wood:
 	PROB_CRISTAL = 0.05
 
 	def __init__(self,size):
+		self.perf = 0;
 		self.size = size
 		self.grid = [[Area(x, y) for x in range(self.size)] for y in range(self.size)]
 
@@ -64,3 +65,13 @@ class Wood:
 	def generate_cristal(self, posx, posy):
 		if (random.random() < self.PROB_CRISTAL):
 			self.grid[posx][posy].set_cristal()
+
+	def performance(area,agent, self):
+		if(area.is_monster == True or area.is_hole == True):
+			self.perf = self.perf - 10 * self.size
+		elif (area.is_portal == True):
+			self.perf = self.perf + 10 * self.size
+		elif (agent.action ==  'USE_CRISTAL'):
+			self.perf = self.perf - 10
+		else :
+			self.perf = self.perf - 1

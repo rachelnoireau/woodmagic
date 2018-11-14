@@ -18,7 +18,7 @@ class Agent:
         self.posY = 0
         self.nbr_dead = 0
         self.nbr_cristal = 0
-
+        self.action = Action
 
 
     def is_dead(self):
