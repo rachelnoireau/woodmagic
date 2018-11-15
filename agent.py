@@ -18,7 +18,6 @@ class Agent:
         self.posX = 0
         self.posY = 0
         self.nbr_dead = 0
-        self.nbr_cristal = 0
 
         self.inference_engine = inference_engine
         self.next_area_to_visit = None
@@ -104,8 +103,6 @@ class Agent:
     def get_pos(self):
         return (self.posX , self.posY)
 
-    def take_cristal(self):
-        self.nbr_cristal += 1
 
     def go_right(self): #juste pour tester
         self.posY += 1
