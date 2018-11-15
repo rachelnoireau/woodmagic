@@ -110,8 +110,6 @@ class Agent:
         return (self.posX , self.posY)
 
 
-    def go_right(self): #juste pour tester
-        self.posY += 1
 
     #Pour aller de position a next_visited_area
     def short_way(self):

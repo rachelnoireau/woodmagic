@@ -122,7 +122,7 @@ class Display:
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_is_next_to_monster:
             # TODO add condition : hero decide use cristal
-            self.agent.use_cristal()
+            #self.agent.use_cristal()
             pos_direction_cristal=(0,0) #TODO : position where the heros think the monster is
             self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
