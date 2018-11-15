@@ -4,6 +4,7 @@ class Area:
 	def __init__(self, posX, posY):
 		self.posX = posX
 		self.posY = posY
+		self.was_visited = False
 		
 		self.is_monster = False
 		self.is_hole = False
