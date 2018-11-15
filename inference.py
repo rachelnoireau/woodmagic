@@ -6,14 +6,13 @@ class Inference:
         self.__premises = premises
         self.__consequences = consequences
 
-    def can_execute(self, context):
+    def can_apply(self, context, *params):
         for premise in self.__premises:
-            # if not premise.is_known_true:
-            if premise not in context:
+            if not premise(context, params):
                 return False
         return True
 
-    def execute(self):
+    def apply(self):
         self.__was_executed = True
         return self.__consequences
 

@@ -2,6 +2,7 @@ import random
 
 from area import Area
 
+
 class Wood:
 	
 	PROB_MONSTER = 0.2
@@ -15,12 +16,16 @@ class Wood:
 		self.situate_portal()
 		for i in range (0, self.size):
 			for j in range (0, self.size):
+				self.grid[i][j].leftNeighbour = self.get_area_at_position(i - 1, j)
+				self.grid[i][j].rightNeighbour = self.get_area_at_position(i + 1, j)
+				self.grid[i][j].upNeighbour = self.get_area_at_position(i, j - 1)
+				self.grid[i][j].downNeighbour = self.get_area_at_position(i, j + 1)
+				self.grid[i][j].onNeighborsSet()
 				if not(i == 0 & j == 0):
 					if not(self.grid[i][j].get_portal()):
 						if not(self.generate_monster(i,j)):
 							self.generate_hole(i,j)
 
-		
 	
 	#def cristal_taken(self, posx,posy):
 	#	self.grid[posx][posy].take_cristal()
@@ -78,3 +83,8 @@ class Wood:
 			self.perf = self.perf - 10
 		else :
 			self.perf = self.perf - 1
+
+	def get_area_at_position(self, x, y):
+		if x < 0 or x >= self.size or y < 0 or y >= self.size:
+			return None
+		return self.grid[y][x]
