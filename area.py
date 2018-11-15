@@ -18,13 +18,14 @@ class Area:
 		self.__received_stone = False
 
 		self.neighbors = []
-		self.rightNeighbour = None
-		self.leftNeighbour = None
-		self.upNeighbour = None
-		self.downNeighbour = None
+		self.right_neighbour = None
+		self.left_neighbour = None
+		self.up_neighbour = None
+		self.down_neighbour = None
 
 	def onNeighborsSet(self):
-		self.neighbors = [self.leftNeighbour, self.rightNeighbour, self.upNeighbour, self.downNeighbour]
+		self.neighbors = [self.left_neighbour, self.right_neighbour, self.up_neighbour, self.down_neighbour]
+		self.neighbors = [n for n in self.neighbors if n is not None]
 
 	def take_cristal(self):
 		self.is_cristal = False
@@ -75,7 +76,7 @@ class Area:
 	def mark_risky_of_hole(self):
 		self.__risky_of_hole = True
 
-	def is_risky_of_wind(self):
+	def is_risky_of_hole(self):
 		return self.__risky_of_hole
 
 	def mark_risky_of_monster(self):

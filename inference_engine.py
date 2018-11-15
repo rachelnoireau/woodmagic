@@ -4,34 +4,50 @@ class InferenceEngine:
     def __init__(self, inferences):
         self.__inferences = inferences
 
-    def run(self, current_context, *params):
+    def run(self, current_context, params):
         new_fact_discovered = True
         while new_fact_discovered:
             new_fact_discovered = False
             for rule in self.__inferences:
-                if rule.can_apply(current_context):
+                if rule.can_apply(current_context, params):
                     rule.apply(current_context, params)
                     new_fact_discovered = True
 
     @staticmethod
-    def has_safe_unexplored_neighboor(area, frontier):
+    def has_portal(area, frontier):
+        return area.is_portal
+
+    @staticmethod
+    def has_safe_unexplored_neighbour(area, frontier):
+        print("Area", area.posX, area.posY, " has neighbors")
+        print(area.neighbors)
         for neighbor in area.neighbors:
-            if not neighbor.was_visited and not neighbor.is_risky_of_monster and not neighbor.is_risky_of_hole:
+            print((not neighbor.was_visited), (not neighbor.is_risky_of_monster()), (not neighbor.is_risky_of_hole()))
+            if (not neighbor.was_visited) and (not neighbor.is_risky_of_monster()) and (not neighbor.is_risky_of_hole()):
+                print("Has unexplored neighbors")
                 return True
+        print("No unexplored neighbour lol")
         return False
 
     @staticmethod
     def explore_safe_neighbors(area, frontier):
         for neighbor in area.neighbors:
-            if not neighbor.was_visited and not neighbor.is_risky_of_hole and not neighbor.is_risky_of_hole:
+            if (not neighbor.was_visited) and (not neighbor.is_risky_of_monster()) and (not neighbor.is_risky_of_hole()):
                 # Add this area at the beginning of the frontier as it is closer and safe
-                frontier[0].insert(0, neighbor)
+                print("Adding it to frontier: - Herbert ", neighbor.posX, neighbor.posY)
+                print(type(frontier))
+                print(frontier)
+                print(type(frontier[0]))
+                (frontier[0]).insert(0, neighbor)
+                print(frontier)
 
     @staticmethod
     def mark_neighbors_risky_of_hole(area, frontier):
         for neighbor in area.neighbors:
             if not neighbor.was_visited:
                 neighbor.mark_risky_of_hole()
+                print(len(frontier))
+                print(frontier)
                 frontier[2].insert(0, neighbor)
 
     @staticmethod
@@ -39,7 +55,12 @@ class InferenceEngine:
         for neighbor in area.neighbors:
             if not neighbor.was_visited:
                 neighbor.mark_risky_of_monster()
+                print("Adding to frontier - bite")
+                print(frontier)
+                print("Frontier[1]:")
+                print(frontier[1])
                 frontier[1].insert(0, neighbor)
+                print(frontier)
 
     @staticmethod
     def mark_safe(area, frontier):

@@ -16,10 +16,10 @@ class Wood:
 		self.situate_portal()
 		for i in range (0, self.size):
 			for j in range (0, self.size):
-				self.grid[i][j].leftNeighbour = self.get_area_at_position(i - 1, j)
-				self.grid[i][j].rightNeighbour = self.get_area_at_position(i + 1, j)
-				self.grid[i][j].upNeighbour = self.get_area_at_position(i, j - 1)
-				self.grid[i][j].downNeighbour = self.get_area_at_position(i, j + 1)
+				self.grid[i][j].left_neighbour = self.get_area_at_position(i - 1, j)
+				self.grid[i][j].right_neighbour = self.get_area_at_position(i + 1, j)
+				self.grid[i][j].up_neighbour = self.get_area_at_position(i, j - 1)
+				self.grid[i][j].down_neighbour = self.get_area_at_position(i, j + 1)
 				self.grid[i][j].onNeighborsSet()
 				if not(i == 0 & j == 0):
 					if not(self.grid[i][j].get_portal()):

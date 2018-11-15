@@ -39,7 +39,6 @@ class Display:
 
         self.start_loop()
 
-		
     def add_grid(self, grid):
         self.window.grid_size()
         self.grid = grid
@@ -102,10 +101,9 @@ class Display:
         return False
 
     def callAct(self):
-        #self.agent.go_right()#TODO : change to action
 
         self.agent.plan_next_action()
-        #self.agent.execute_action()
+        self.agent.execute_action()
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
@@ -124,7 +122,7 @@ class Display:
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_is_next_to_monster:
             # TODO add condition : hero decide use cristal
-            self.agent.take_cristal()
+            self.agent.use_cristal()
             pos_direction_cristal=(0,0) #TODO : position where the heros think the monster is
             self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
