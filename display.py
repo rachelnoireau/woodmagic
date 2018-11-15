@@ -104,8 +104,6 @@ class Display:
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
-        print(self.agent.get_pos())
-
         self.updateWindow()
         self.window.update()
 
@@ -122,13 +120,12 @@ class Display:
             # TODO add condition : hero decide use cristal
             self.agent.take_cristal()
             pos_direction_cristal=(0,0) #TODO : position where the heros think the monster is
-            self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].kill_monster()
+            self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
             time.sleep(2)
             self.updateWindow()
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
-            # TODO add condition : hero decide to take potal
             self.agent.next_level()
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
