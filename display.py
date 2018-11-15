@@ -34,6 +34,9 @@ class Display:
 
         self.add_grid(self.wood.get_grid())
         self.create_button()
+
+        # self.agent.plan_next_action()
+
         self.start_loop()
 
 		

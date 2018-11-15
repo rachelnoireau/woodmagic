@@ -12,7 +12,20 @@ class Area:
 		self.is_next_to_hole = False
 		self.is_portal = False
 		self.is_cristal = False
-		
+
+		self.__risky_of_hole = False
+		self.__risky_of_monster = False
+		self.__received_stone = False
+
+		self.neighbors = []
+		self.rightNeighbour = None
+		self.leftNeighbour = None
+		self.upNeighbour = None
+		self.downNeighbour = None
+
+	def onNeighborsSet(self):
+		self.neighbors = [self.leftNeighbour, self.rightNeighbour, self.upNeighbour, self.downNeighbour]
+
 	def take_cristal(self):
 		self.is_cristal = False
 		
@@ -55,3 +68,28 @@ class Area:
 
 	def get_is_next_to_monster(self):
 		return self.is_next_to_monster
+
+	def is_safe(self):
+		return not (self.is_monster or self.is_hole)
+
+	def mark_risky_of_hole(self):
+		self.__risky_of_hole = True
+
+	def is_risky_of_wind(self):
+		return self.__risky_of_hole
+
+	def mark_risky_of_monster(self):
+		self.__risky_of_monster = True
+
+	def is_risky_of_monster(self):
+		return self.__risky_of_monster
+
+	def receive_stone(self):
+		self.__received_stone = True
+
+	def received_stone(self):
+		return self.__received_stone
+
+	def mark_safe(self):
+		self.__risky_of_wind = False
+		self.__risky_of_monster = False
