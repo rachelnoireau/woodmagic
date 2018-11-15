@@ -102,7 +102,10 @@ class Display:
         return False
 
     def callAct(self):
-        self.agent.go_right()#TODO : change to action
+        #self.agent.go_right()#TODO : change to action
+
+        self.agent.plan_next_action()
+        #self.agent.execute_action()
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
@@ -129,6 +132,7 @@ class Display:
             self.updateWindow()
 
         if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
+            # TODO : add condition exite
             self.agent.next_level()
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
