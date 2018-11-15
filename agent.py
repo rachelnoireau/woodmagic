@@ -1,6 +1,6 @@
 from enum import Enum
 from area import Area
-
+import math
 
 class Action(Enum):
     UP = 1
@@ -107,3 +107,42 @@ class Agent:
     def go_right(self): #juste pour tester
         self.posY += 1
 
+    #Pour aller de position a next_visited_area
+    def short_way(self):
+        nbcase = 0
+        case = self.current_area
+        visited_node = []
+        distance = []
+        for node in self.visited_areas :
+            distance.add(math.inf)
+        go_up = False
+        go_left = False
+        if self.current_area.posX - self.next_area_to_visit.posX > 0 :
+            go_left = True
+        if self.current_area.posY - self.next_area_to_visit.posY > 0:
+            go_up = True
+        while case != self.next_area_to_visit :
+            while case.posX != self.next_area_to_visit.posX :
+                if go_left :
+                    for node in self.visited_areas :
+                        if node.posX == case.posX+1 & node.posY == case.posY :
+                            case = node
+                else :
+                    for node in self.visited_areas:
+                        if node.posX == case.posX -1 & node.posY == case.posY:
+                            case = node
+                nbcase+1
+                while case.posY != self.next_area_to_visit.posY:
+                    if go_up:
+                        for node in self.visited_areas:
+                            if node.posX == case.posX  & node.posY == case.posY +1:
+                                case = node
+                    else:
+                        for node in self.visited_areas:
+                            if node.posX == case.posX  & node.posY == case.posY -1:
+                                case = node
+                    nbcase + 1
+
+               # visited_node.add(case)
+
+        return nbcase
