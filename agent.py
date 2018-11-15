@@ -33,19 +33,25 @@ class Agent:
         self.action = Action
 
     def execute_action(self):
-        self.next_action.execute()
+        # self.next_action.execute()
+        return None
 
     def plan_next_action(self):
         self.inference_engine.run(self.current_area, self.frontier)
         self.target_area = self.first_area_in_frontier()
-        self.get_action_to_target()
+        self.next_action = self.get_action_to_target()
 
     def first_area_in_frontier(self):
+        print("Getting first area in frontier")
+        print(self.frontier)
         if len(self.frontier[0]) > 0:  # Safe rooms
+            print(self.frontier[0][0].posX, self.frontier[0][0].posY)
             return self.frontier[0][0]
         if len(self.frontier[1]) > 0:  # Rooms with danger of monster
+            print(self.frontier[1][0].posX, self.frontier[0][0].posY)
             return self.frontier[1][0]
         if len(self.frontier[2]) > 0:  # Rooms with danger of hole
+            print(self.frontier[2][0].posX, self.frontier[0][0].posY)
             return self.frontier[2][0]
         return None
 
@@ -55,13 +61,13 @@ class Agent:
             return Action.TAKE_PORTAL
         if self.target_area in self.current_area.neighbors:
             # Direct neighbor
-            if self.target_area.risky_of_monster:
+            if self.target_area.is_risky_of_monster():
                 return Action.USE_CRISTAL
-            if self.target_area.x > self.current_area.x:
+            if self.target_area.posX > self.current_area.posX:
                 return Action.RIGHT
-            if self.target_area.x < self.current_area.x:
+            if self.target_area.posX < self.current_area.posX:
                 return Action.LEFT
-            if self.target_area.y < self.current_area.y:
+            if self.target_area.posY < self.current_area.posY:
                 return Action.UP
             else:
                 return Action.DOWN
@@ -69,10 +75,10 @@ class Agent:
         return self.get_next_move_toward_target()
 
     def get_next_move_toward_target(self):
-        ok_right = self.ok_for_itinerary(self.current_area.right_neighbor)
-        ok_left = self.ok_for_itinerary(self.current_area.left_neighbor)
-        ok_up = self.ok_for_itinerary(self.current_area.upper_neighbor)
-        ok_down = self.ok_for_itinerary(self.current_area.lower_neighbor)
+        ok_right = self.ok_for_itinerary(self.current_area.right_neighbour)
+        ok_left = self.ok_for_itinerary(self.current_area.left_neighbour)
+        ok_up = self.ok_for_itinerary(self.current_area.up_neighbour)
+        ok_down = self.ok_for_itinerary(self.current_area.down_neighbour)
 
         if self.target_area.x > self.current_area.x:
             if ok_right:

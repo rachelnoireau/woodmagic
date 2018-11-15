@@ -39,7 +39,6 @@ class Display:
 
         self.start_loop()
 
-		
     def add_grid(self, grid):
         self.window.grid_size()
         self.grid = grid
@@ -102,7 +101,8 @@ class Display:
         return False
 
     def callAct(self):
-        self.agent.go_right()#TODO : change to action
+        self.agent.plan_next_action()
+        self.agent.execute_action()
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()

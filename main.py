@@ -20,18 +20,21 @@ class Simulation:
         # rule_set = [normal_case, monster_case, hole_case, wind_case1, wind_case2, poop_case1, poop_case2, gate_case]
 
         # When inferences only return new knowledge on the world
-        normal_case = Inference([InferenceEngine.has_safe_unexplored_neighboor], [InferenceEngine.explore_safe_neighbors])
+        normal_case = Inference([InferenceEngine.has_safe_unexplored_neighbour], [InferenceEngine.explore_safe_neighbors])
         wind_case = Inference([InferenceEngine.is_windy], [InferenceEngine.mark_neighbors_risky_of_hole])
         poop_case = Inference([InferenceEngine.is_pooped], [InferenceEngine.mark_neighbors_risky_of_monster])
         area_cleaned = Inference([InferenceEngine.is_risky_of_monster, InferenceEngine.threw_stone],
                                  [InferenceEngine.mark_safe])
+        gate_case = Inference([InferenceEngine.has_portal], [InferenceEngine.take_portal])
 
-        rule_set = [normal_case, poop_case, wind_case, area_cleaned]
+        rule_set = [gate_case, normal_case, poop_case, wind_case, area_cleaned]
 
         inference_engine = InferenceEngine(rule_set)
         self.size = 3
         self.wood = Wood(self.size)
         self.agent = Agent(inference_engine, self.wood)
+        self.display = Display(self.agent, self.wood)
+
 
         #while(True):
         #self.agent.set_pos(0,0)
@@ -46,7 +49,7 @@ class Simulation:
 
         #self.agent.next_level()
 
-        self.display = Display(self.agent, self.wood)
+        # self.display = Display(self.agent, self.wood)
 
 
 
