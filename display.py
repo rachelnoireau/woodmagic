@@ -45,7 +45,6 @@ class Display:
         for i in range(len(grid)):
             for j in range(len(grid[0])):
                 self.draw_area(grid[j][i])
-
         self.draw_agent()
 
     def draw_area(self, area):
@@ -144,7 +143,7 @@ class Display:
         scale_h = (self.hero_photo.height() / self.CELL_SIZE)*2
         hero_photo = hero_photo.zoom(1).subsample(int(scale_w)+1, int(scale_h)+1)
         self.agent_image = self.cv.create_image(x_agent, y_agent, anchor=NW, image=self.hero_photo)
-        self.cv.grid(row=1, column=x_agent - 1)
+        self.cv.grid(row=1, column=0)#x_agent - 1
 
     def on_closing(self):
         self.window.destroy()
