@@ -98,6 +98,7 @@ class Display:
 
         self.agent.plan_next_action()
         actionPerformed = self.agent.execute_action()
+        print(actionPerformed)
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
@@ -126,7 +127,10 @@ class Display:
             # TODO : add condition exite
             self.agent.next_level()
             self.agent.set_pos(0, 0)
-            self.agent_pos = self.agent.get_pos()
+            print("Here")
+            print(type(self.agent_pos))
+            self.agent_pos = (self.agent.current_area.posX(), self.agent.current_area.posY())
+            print(type(self.agent_pos))
             self.wood = Wood(self.agent.level + 3)
             self.grid = self.wood.get_grid()
             self.CELL_SIZE = 650 / (self.agent.level + 3)
@@ -147,11 +151,6 @@ class Display:
         Button(text ="next action", command = self.callAct).grid(sticky=S)
 
     def draw_agent(self, cv):
-        print("Agent pos")
-        print(self.agent_pos)
-        print(self.CELL_SIZE)
-        print(type(self.agent_pos[0]))
-
         x_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[0])
         y_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[1])
         #resize the image

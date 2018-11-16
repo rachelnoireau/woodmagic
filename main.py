@@ -14,9 +14,9 @@ class Simulation:
         poop_case = Inference([InferenceEngine.is_pooped], [InferenceEngine.mark_neighbors_risky_of_monster])
         area_cleaned = Inference([InferenceEngine.is_risky_of_monster, InferenceEngine.threw_stone],
                                  [InferenceEngine.mark_safe])
-        gate_case = Inference([InferenceEngine.has_portal], [InferenceEngine.take_portal])
+        # gate_case = Inference([InferenceEngine.has_portal], [InferenceEngine.take_portal])
 
-        rule_set = [gate_case, normal_case, poop_case, wind_case, area_cleaned]
+        rule_set = [normal_case, poop_case, wind_case, area_cleaned]
         inference_engine = InferenceEngine(rule_set)
 
         self.size = 3
