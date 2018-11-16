@@ -99,11 +99,30 @@ class Display:
         self.agent.plan_next_action()
         actionPerformed = self.agent.execute_action()
 
+        print(actionPerformed)
+
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
         self.updateWindow()
         self.window.update()
+
+        if actionPerformed == Action.RIGHT:
+            self.agent.set_pos(self.agent.get_pos()[0]+1,self.agent.get_pos()[1])
+            self.agent_pos = self.agent.get_pos()
+
+        if actionPerformed == Action.LEFT:
+            self.agent.set_pos(self.agent.get_pos()[0]-1,self.agent.get_pos()[1])
+            self.agent_pos = self.agent.get_pos()
+
+        if actionPerformed == Action.DOWN:
+            self.agent.set_pos(self.agent.get_pos()[0],self.agent.get_pos()[1]+1)
+            self.agent_pos = self.agent.get_pos()
+
+        if actionPerformed == Action.UP:
+            self.agent.set_pos(self.agent.get_pos()[0],self.agent.get_pos()[1]-1)
+            self.agent_pos = self.agent.get_pos()
+
 
         if self.willDie():
             self.agent.is_dead()
@@ -113,9 +132,10 @@ class Display:
             time.sleep(2)
             self.updateWindow()
 
-        if (self.agent.next_area_to_visit.get_is_next_to_monster() & (actionPerformed == Action.USE_CRISTAL)):
+        if (self.agent.next_area_to_visit.get_monster() & (actionPerformed == Action.USE_CRISTAL)):
             #self.agent.use_cristal()
-
+            print("on tue le monstre")
+            print((self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY))
             pos_direction_cristal = (self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
             self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 

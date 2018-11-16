@@ -94,9 +94,15 @@ class Agent:
     def get_action_to_target(self):
         if self.current_area == self.next_area_to_visit:
             # We don't want to move -> we are on the portal
+            print("take the portal")
             return Action.TAKE_PORTAL
+        print(self.current_area.neighbors)
+        print(self.next_area_to_visit.posX)
+        print(self.next_area_to_visit.posY)
         if self.next_area_to_visit in self.current_area.neighbors:
             # Direct neighbor
+            print("ici")
+
             if self.next_area_to_visit.is_risky_of_monster():
                 return Action.USE_CRISTAL
             if self.next_area_to_visit.posX > self.current_area.posX:
