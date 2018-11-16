@@ -45,7 +45,7 @@ class Agent:
         elif self.next_action == Action.LEFT:
             self.move_to(self.current_area.left_neighbour)
         elif self.next_action == Action.USE_CRISTAL:
-            self.target_area.received_cristal()
+            self.next_area_to_visit.received_cristal()
         elif self.next_action == Action.TAKE_PORTAL:
             self.take_portal()
 
@@ -62,7 +62,13 @@ class Agent:
         self.current_area = area
         self.posX = area.posX
         self.posY = area.posY
+        self.remove_from_frontier(self.current_area)
         # TODO: Remove this area from frontier if it's in
+
+    def remove_from_frontier(self, area):
+        for arealist in self.frontier:
+            if area in arealist:
+                arealist.remove(area)
 
     def take_portal(self):
         if self.current_area.is_cristal:
@@ -73,36 +79,31 @@ class Agent:
 
     def plan_next_action(self):
         self.inference_engine.run(self.current_area, self.frontier)
-        self.target_area = self.first_area_in_frontier()
+        self.next_area_to_visit = self.first_area_in_frontier()
         self.next_action = self.get_action_to_target()
 
     def first_area_in_frontier(self):
-        print("Getting first area in frontier")
-        print(self.frontier)
         if len(self.frontier[0]) > 0:  # Safe rooms
-            print(self.frontier[0][0].posX, self.frontier[0][0].posY)
             return self.frontier[0][0]
         if len(self.frontier[1]) > 0:  # Rooms with danger of monster
-            print(self.frontier[1][0].posX, self.frontier[0][0].posY)
             return self.frontier[1][0]
         if len(self.frontier[2]) > 0:  # Rooms with danger of hole
-            print(self.frontier[2][0].posX, self.frontier[0][0].posY)
             return self.frontier[2][0]
         return None
 
     def get_action_to_target(self):
-        if self.current_area == self.target_area:
+        if self.current_area == self.next_area_to_visit:
             # We don't want to move -> we are on the portal
             return Action.TAKE_PORTAL
-        if self.target_area in self.current_area.neighbors:
+        if self.next_area_to_visit in self.current_area.neighbors:
             # Direct neighbor
-            if self.target_area.is_risky_of_monster():
+            if self.next_area_to_visit.is_risky_of_monster():
                 return Action.USE_CRISTAL
-            if self.target_area.posX > self.current_area.posX:
+            if self.next_area_to_visit.posX > self.current_area.posX:
                 return Action.RIGHT
-            if self.target_area.posX < self.current_area.posX:
+            if self.next_area_to_visit.posX < self.current_area.posX:
                 return Action.LEFT
-            if self.target_area.posY < self.current_area.posY:
+            if self.next_area_to_visit.posY < self.current_area.posY:
                 return Action.UP
             else:
                 return Action.DOWN
@@ -115,13 +116,13 @@ class Agent:
         ok_up = self.ok_for_itinerary(self.current_area.up_neighbour)
         ok_down = self.ok_for_itinerary(self.current_area.down_neighbour)
 
-        if self.target_area.x > self.current_area.x:
+        if self.next_area_to_visit.posX > self.current_area.posX:
             if ok_right:
                 return Action.RIGHT
-        if self.target_area.x < self.current_area.x:
+        if self.next_area_to_visit.posX < self.current_area.posX:
             if ok_left:
                 return Action.LEFT
-        if self.target_area.y < self.current_area.y:
+        if self.next_area_to_visit.posY < self.current_area.posY:
             if ok_up:
                 return Action.UP
         else:

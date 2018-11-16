@@ -19,14 +19,10 @@ class InferenceEngine:
 
     @staticmethod
     def has_safe_unexplored_neighbour(area, frontier):
-        print("Area", area.posX, area.posY, " has neighbors")
-        print(area.neighbors)
         for neighbor in area.neighbors:
             print((not neighbor.was_visited), (not neighbor.is_risky_of_monster()), (not neighbor.is_risky_of_hole()))
             if (not neighbor.was_visited) and (not neighbor.is_risky_of_monster()) and (not neighbor.is_risky_of_hole()):
-                print("Has unexplored neighbors")
                 return True
-        print("No unexplored neighbour lol")
         return False
 
     @staticmethod
@@ -34,20 +30,13 @@ class InferenceEngine:
         for neighbor in area.neighbors:
             if (not neighbor.was_visited) and (not neighbor.is_risky_of_monster()) and (not neighbor.is_risky_of_hole()):
                 # Add this area at the beginning of the frontier as it is closer and safe
-                print("Adding it to frontier: - Herbert ", neighbor.posX, neighbor.posY)
-                print(type(frontier))
-                print(frontier)
-                print(type(frontier[0]))
                 (frontier[0]).insert(0, neighbor)
-                print(frontier)
 
     @staticmethod
     def mark_neighbors_risky_of_hole(area, frontier):
         for neighbor in area.neighbors:
             if not neighbor.was_visited:
                 neighbor.mark_risky_of_hole()
-                print(len(frontier))
-                print(frontier)
                 frontier[2].insert(0, neighbor)
 
     @staticmethod
@@ -55,12 +44,7 @@ class InferenceEngine:
         for neighbor in area.neighbors:
             if not neighbor.was_visited:
                 neighbor.mark_risky_of_monster()
-                print("Adding to frontier - bite")
-                print(frontier)
-                print("Frontier[1]:")
-                print(frontier[1])
                 frontier[1].insert(0, neighbor)
-                print(frontier)
 
     @staticmethod
     def mark_safe(area, frontier):
@@ -82,7 +66,7 @@ class InferenceEngine:
         return None
 
     @staticmethod
-    def take_portal():
+    def take_portal(area, frontier):
         return None
 
     @staticmethod
