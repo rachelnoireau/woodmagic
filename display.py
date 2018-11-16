@@ -113,10 +113,10 @@ class Display:
             time.sleep(2)
             self.updateWindow()
 
-        if (self.agent.target_area.get_is_next_to_monster() & (actionPerformed == Action.USE_CRISTAL)):
+        if (self.agent.next_area_to_visit.get_is_next_to_monster() & (actionPerformed == Action.USE_CRISTAL)):
             #self.agent.use_cristal()
 
-            pos_direction_cristal = (self.agent.target_area.posX, self.agent.target_area.posY)
+            pos_direction_cristal = (self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
             self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
             time.sleep(2)
