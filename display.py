@@ -94,8 +94,6 @@ class Display:
         action_performed = self.agent.execute_action()
         print(action_performed)
 
-        print(actionPerformed)
-
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
