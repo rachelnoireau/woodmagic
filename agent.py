@@ -36,6 +36,7 @@ class Agent:
 
     def execute_action(self):
         # self.action_queue.put(self.next_action)
+        print(self.current_area.posX, self.current_area.posY)
         if self.next_action == Action.UP:
             self.move_to(self.current_area.up_neighbour)
         elif self.next_action == Action.DOWN:
@@ -45,7 +46,8 @@ class Agent:
         elif self.next_action == Action.LEFT:
             self.move_to(self.current_area.left_neighbour)
         elif self.next_action == Action.USE_CRISTAL:
-            self.next_area_to_visit.received_cristal()
+            print('Sending cristal to ', self.next_area_to_visit.posX, self.next_area_to_visit.posY)
+            self.next_area_to_visit.receive_cristal()
         elif self.next_action == Action.TAKE_PORTAL:
             self.take_portal()
 
@@ -55,15 +57,18 @@ class Agent:
         return action_performed
 
     def move_to(self, area):
+        print("Moving to", area.posX, area.posY)
         if not area:
             print("Error, tried to move where there is no area")
             return
         self.visited_areas.append(self.current_area)
+        self.current_area.was_visited = True
         self.current_area = area
         self.posX = area.posX
         self.posY = area.posY
         self.remove_from_frontier(self.current_area)
-        # TODO: Remove this area from frontier if it's in
+        if self.current_area.is_hole:
+            self.current_area.user_fell_in = True
 
     def remove_from_frontier(self, area):
         for arealist in self.frontier:
@@ -75,12 +80,22 @@ class Agent:
             self.level += 1
 
     def update_performance(self):
+        # TODO
         return None
 
     def plan_next_action(self):
         self.inference_engine.run(self.current_area, self.frontier)
         self.next_area_to_visit = self.first_area_in_frontier()
+        print("Frontier")
+        self.print_frontier()
+        print("Next area to visit:", self.next_area_to_visit.posX, self.next_area_to_visit.posY)
         self.next_action = self.get_action_to_target()
+
+    def print_frontier(self):
+        for arealist in self.frontier:
+            print("- ")
+            for area in arealist:
+                print(area.posX, area.posY)
 
     def first_area_in_frontier(self):
         if len(self.frontier[0]) > 0:  # Safe rooms
@@ -92,9 +107,9 @@ class Agent:
         return None
 
     def get_action_to_target(self):
-        if self.current_area == self.next_area_to_visit:
+        # if self.current_area == self.next_area_to_visit:
             # We don't want to move -> we are on the portal
-            print("take the portal")
+        if self.current_area.is_portal:
             return Action.TAKE_PORTAL
         print(self.current_area.neighbors)
         print(self.next_area_to_visit.posX)

@@ -6,6 +6,9 @@ class Inference:
         self.premises = premises
         self.consequences = consequences
 
+    def reset(self):
+        self.was_executed = False
+
     def can_apply(self, context, params):
         if self.was_executed:
             return False

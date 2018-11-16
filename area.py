@@ -16,6 +16,7 @@ class Area:
 		self.__risky_of_hole = False
 		self.__risky_of_monster = False
 		self.__received_stone = False
+		self.user_fell_in = False
 
 		self.neighbors = []
 		self.right_neighbour = None
@@ -83,14 +84,15 @@ class Area:
 		self.__risky_of_monster = True
 
 	def is_risky_of_monster(self):
+		if self.__received_stone:
+			return True
 		return self.__risky_of_monster
 
-	def receive_stone(self):
+	def receive_cristal(self):
 		self.__received_stone = True
 
 	def received_cristal(self):
 		return self.__received_stone
 
-	def mark_safe(self):
-		self.__risky_of_wind = False
+	def mark_safe_of_monster(self):
 		self.__risky_of_monster = False

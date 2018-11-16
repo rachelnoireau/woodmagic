@@ -5,11 +5,15 @@ class InferenceEngine:
         self.__inferences = inferences
 
     def run(self, current_context, params):
+        for rule in self.__inferences:
+            rule.reset()
+
         new_fact_discovered = True
         while new_fact_discovered:
             new_fact_discovered = False
             for rule in self.__inferences:
                 if rule.can_apply(current_context, params):
+                    print("Area ", current_context.posX, current_context.posY)
                     rule.apply(current_context, params)
                     new_fact_discovered = True
 
@@ -27,30 +31,46 @@ class InferenceEngine:
 
     @staticmethod
     def explore_safe_neighbors(area, frontier):
+        print("Explore safe neighbors")
         for neighbor in area.neighbors:
             if (not neighbor.was_visited) and (not neighbor.is_risky_of_monster()) and (not neighbor.is_risky_of_hole()):
                 # Add this area at the beginning of the frontier as it is closer and safe
-                (frontier[0]).insert(0, neighbor)
+                print("I have safe neighbor", neighbor.posX, neighbor.posY)
+                InferenceEngine.add_to_frontier(neighbor, 0, frontier)
 
     @staticmethod
     def mark_neighbors_risky_of_hole(area, frontier):
+        print("Mark neighbors risk hole")
         for neighbor in area.neighbors:
             if not neighbor.was_visited:
                 neighbor.mark_risky_of_hole()
-                frontier[2].insert(0, neighbor)
+                InferenceEngine.add_to_frontier(neighbor, 2, frontier)
 
     @staticmethod
     def mark_neighbors_risky_of_monster(area, frontier):
+        print("Mark neighbors risk monster")
         for neighbor in area.neighbors:
-            if not neighbor.was_visited:
+            if not neighbor.was_visited and not neighbor.received_cristal:
                 neighbor.mark_risky_of_monster()
-                frontier[1].insert(0, neighbor)
+                InferenceEngine.add_to_frontier(neighbor, 1, frontier)
 
     @staticmethod
-    def mark_safe(area, frontier):
-        area.mark_safe()
+    def mark_neighbor_safe_of_monster(area, frontier):
+        print("Mark safe")
+        for neighbor in area.neighbors:
+            if neighbor.received_cristal:
+                neighbor.mark_safe_of_monster()
 
-
+    @staticmethod
+    def add_to_frontier(area, index, frontier):
+        # If the area is already in the frontier at a less risky range, we leave it there
+        for listindex, arealist in enumerate(frontier):
+            if area in arealist:
+                if listindex < index:
+                    arealist.remove(area)
+                else:
+                    return
+        frontier[index].insert(0, area)
 
     # Actions
     @staticmethod
@@ -116,5 +136,26 @@ class InferenceEngine:
         return area.is_risky_of_monster()
 
     @staticmethod
-    def threw_stone(area, frontier):
-        return area.received_stone()
+    def threw_stone_on_neighbor(area, frontier):
+        for neighbor in area.neighbors:
+            if neighbor.received_cristal():
+                return True
+        return False
+
+    @staticmethod
+    def agent_fell_in_neighbor(area, frontier):
+        for neighbor in area.neighbors:
+            if neighbor.user_fell_in:
+                return True
+
+    @staticmethod
+    def agent_knows_hole_neighbor(area, frontier):
+        for neighbor in area.neighbors:
+            if neighbor.user_fell_in:
+                InferenceEngine.remove_from_frontier(neighbor, frontier)
+
+    @staticmethod
+    def remove_from_frontier(area, frontier):
+        for arealist in frontier:
+            if area in arealist:
+               arealist.remove(area)

@@ -16,18 +16,18 @@ class Wood:
 		self.situate_portal()
 		for i in range (0, self.size):
 			for j in range (0, self.size):
-				self.grid[i][j].left_neighbour = self.get_area_at_position(i - 1, j)
-				self.grid[i][j].right_neighbour = self.get_area_at_position(i + 1, j)
-				self.grid[i][j].up_neighbour = self.get_area_at_position(i, j - 1)
-				self.grid[i][j].down_neighbour = self.get_area_at_position(i, j + 1)
+				self.grid[i][j].left_neighbour = self.get_area_at_position(j - 1, i)
+				self.grid[i][j].right_neighbour = self.get_area_at_position(j + 1, i)
+				self.grid[i][j].up_neighbour = self.get_area_at_position(j, i - 1)
+				self.grid[i][j].down_neighbour = self.get_area_at_position(j, i + 1)
 				self.grid[i][j].onNeighborsSet()
 				if not(i == 0 & j == 0):
 					if not(self.grid[i][j].get_portal()):
-						if not(self.generate_monster(i,j)):
-							self.generate_hole(i,j)
+						if not(self.generate_monster(j,i)):
+							self.generate_hole(j,i)
 
 	def use_cristal(self, posx, posy):
-		self.grid[posx][posy].cristal_use()
+		self.grid[posy][posx].cristal_use()
 		
 	def get_grid(self):
 		return self.grid
@@ -38,33 +38,33 @@ class Wood:
 		if( posx == 0 & posy == 0 ):
 			self.situate_portal()
 		else:
-			self.grid[posx][posy].set_portal()
+			self.grid[posy][posx].set_portal()
 		
 	def generate_monster(self, posx, posy):
 		if (random.random() < self.PROB_MONSTER):
-			self.grid[posx][posy].set_monster()
-			if(posx>0):
-				self.grid[posx-1][posy].set_next_to_monster()
-			if(posx<self.size-1):
-				self.grid[posx+1][posy].set_next_to_monster()
+			self.grid[posy][posx].set_monster()
 			if(posy>0):
-				self.grid[posx][posy-1].set_next_to_monster()
+				self.grid[posy-1][posx].set_next_to_monster()
 			if(posy<self.size-1):
-				self.grid[posx][posy+1].set_next_to_monster()
+				self.grid[posy+1][posx].set_next_to_monster()
+			if(posx>0):
+				self.grid[posy][posx-1].set_next_to_monster()
+			if(posx<self.size-1):
+				self.grid[posy][posx+1].set_next_to_monster()
 			return True
 		return False
 				
 	def generate_hole(self, posx, posy):
 		if (random.random() < self.PROB_HOLE):
-			self.grid[posx][posy].set_hole()
-			if(posx>0):
-				self.grid[posx-1][posy].set_next_to_hole()
-			if(posx<self.size-1):
-				self.grid[posx+1][posy].set_next_to_hole()
+			self.grid[posy][posx].set_hole()
 			if(posy>0):
-				self.grid[posx][posy-1].set_next_to_hole()
+				self.grid[posy-1][posx].set_next_to_hole()
 			if(posy<self.size-1):
-				self.grid[posx][posy+1].set_next_to_hole()
+				self.grid[posy+1][posx].set_next_to_hole()
+			if(posx>0):
+				self.grid[posy][posx-1].set_next_to_hole()
+			if(posx<self.size-1):
+				self.grid[posy][posx+1].set_next_to_hole()
 
 	def performance(area,agent, self):
 		if(area.is_monster == True or area.is_hole == True):
