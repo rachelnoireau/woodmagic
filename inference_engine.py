@@ -42,7 +42,7 @@ class InferenceEngine:
     def mark_neighbors_risky_of_hole(area, frontier):
         print("Mark neighbors risk hole")
         for neighbor in area.neighbors:
-            if not neighbor.was_visited:
+            if not neighbor.was_visited and not neighbor.user_fell_in:
                 neighbor.mark_risky_of_hole()
                 InferenceEngine.add_to_frontier(neighbor, 2, frontier)
 
@@ -61,7 +61,8 @@ class InferenceEngine:
         print("Mark safe")
         for neighbor in area.neighbors:
             if neighbor.received_cristal:
-                neighbor.mark_safe_of_monster()
+                print("is safe: ", neighbor.posX, neighbor.posY)
+                InferenceEngine.add_to_frontier(neighbor, 0, frontier)
 
     @staticmethod
     def add_to_frontier(area, index, frontier):
@@ -156,8 +157,10 @@ class InferenceEngine:
 
     @staticmethod
     def agent_knows_hole_neighbor(area, frontier):
+        print("Agent knows there is hole at")
         for neighbor in area.neighbors:
             if neighbor.user_fell_in:
+                print(neighbor.posX, neighbor.posY)
                 InferenceEngine.remove_from_frontier(neighbor, frontier)
 
     @staticmethod

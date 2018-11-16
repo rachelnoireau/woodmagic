@@ -101,15 +101,18 @@ class Display:
 
         if self.will_die():
             self.agent.is_dead()
+            self.agent.current_area = self.wood.get_area_at_position(0, 0)
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
 
             time.sleep(2)
             self.update_window()
 
-        if self.agent.next_area_to_visit.get_is_next_to_monster() and action_performed == Action.USE_CRISTAL:
-            pos_direction_cristal = (self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
-            self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
+        if self.agent.next_area_to_visit.is_monster and action_performed == Action.USE_CRISTAL:
+            print("Killing monster at ", self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
+            self.agent.next_area_to_visit.kill_monster()
+            # pos_direction_cristal = (self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
+            # self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
             time.sleep(2)
             self.update_window()
@@ -119,6 +122,7 @@ class Display:
             self.agent.set_pos(0, 0)
             self.wood = Wood(self.agent.level + 3)
             self.agent.current_area = self.wood.get_area_at_position(0, 0)
+            self.agent.frontier = [[], [], []]
             self.agent_pos = (self.agent.current_area.posX, self.agent.current_area.posY)
             self.grid = self.wood.get_grid()
             self.CELL_SIZE = 650 / (self.agent.level + 3)
