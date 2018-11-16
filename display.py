@@ -151,8 +151,9 @@ class Display:
         print(self.agent_pos)
         print(self.CELL_SIZE)
         print(type(self.agent_pos[0]))
-        x_agent = int(1 + self.CELL_SIZE * self.agent_pos[0])
-        y_agent = int(1 + self.CELL_SIZE * self.agent_pos[1])
+
+        x_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[0])
+        y_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[1])
         #resize the image
         hero_photo = self.hero_photo
         scale_w = (self.hero_photo.width() / self.CELL_SIZE)*2

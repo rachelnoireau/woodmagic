@@ -60,8 +60,8 @@ class Agent:
             return
         self.visited_areas.append(self.current_area)
         self.current_area = area
-        self.posX = area
-        self.posY = area
+        self.posX = area.posX
+        self.posY = area.posY
         # TODO: Remove this area from frontier if it's in
 
     def take_portal(self):
