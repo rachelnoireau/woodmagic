@@ -3,7 +3,7 @@ import sys
 import os
 
 import time
-
+from agent import Action
 from wood import Wood
 
 
@@ -98,7 +98,6 @@ class Display:
 
         self.agent.plan_next_action()
         actionPerformed = self.agent.execute_action()
-
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
@@ -113,17 +112,16 @@ class Display:
             time.sleep(2)
             self.updateWindow()
 
-        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_is_next_to_monster:
-            # TODO add condition : hero decide use cristal
+        if (self.agent.target_area.get_is_next_to_monster() & (actionPerformed == Action.USE_CRISTAL)):
             #self.agent.use_cristal()
-            pos_direction_cristal=(0,0) #TODO : position where the heros think the monster is
+
+            pos_direction_cristal = (self.agent.target_area.posX, self.agent.target_area.posY)
             self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
             time.sleep(2)
             self.updateWindow()
 
-        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal():
-            # TODO : add condition exite
+        if (self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_portal() & (actionPerformed == Action.TAKE_PORTAL) ):
             self.agent.next_level()
             self.agent.set_pos(0, 0)
             self.agent_pos = self.agent.get_pos()
@@ -147,10 +145,6 @@ class Display:
         Button(text ="next action", command = self.callAct).grid(sticky=S)
 
     def draw_agent(self, cv):
-        print("Agent pos")
-        print(self.agent_pos)
-        print(self.CELL_SIZE)
-        print(type(self.agent_pos[0]))
 
         x_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[0])
         y_agent = int(1 + self.CELL_SIZE * self.agent.get_pos()[1])
