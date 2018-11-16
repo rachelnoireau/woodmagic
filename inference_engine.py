@@ -50,7 +50,9 @@ class InferenceEngine:
     def mark_neighbors_risky_of_monster(area, frontier):
         print("Mark neighbors risk monster")
         for neighbor in area.neighbors:
-            if not neighbor.was_visited and not neighbor.received_cristal:
+            print(neighbor.posX, neighbor.posY, "Was visited ? ", neighbor.was_visited, " cristal ?", neighbor.received_cristal())
+            if (not neighbor.was_visited) and (not neighbor.received_cristal()):
+                print("Marking ", neighbor.posX, neighbor.posY, " as risky for monster")
                 neighbor.mark_risky_of_monster()
                 InferenceEngine.add_to_frontier(neighbor, 1, frontier)
 
@@ -63,13 +65,17 @@ class InferenceEngine:
 
     @staticmethod
     def add_to_frontier(area, index, frontier):
-        # If the area is already in the frontier at a less risky range, we leave it there
+        # If the area is already in the frontier at more risky range, we leave it there
+        # except if it received a cristal
         for listindex, arealist in enumerate(frontier):
             if area in arealist:
-                if listindex < index:
+                if listindex <= index:
+                    arealist.remove(area)
+                elif listindex > index and listindex == 1 and area.received_cristal():  # Case when we threw a cristal
                     arealist.remove(area)
                 else:
                     return
+
         frontier[index].insert(0, area)
 
     # Actions

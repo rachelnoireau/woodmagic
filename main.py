@@ -14,7 +14,7 @@ class Simulation:
                               [InferenceEngine.agent_knows_hole_neighbor])
         wind_case = Inference([InferenceEngine.is_windy], [InferenceEngine.mark_neighbors_risky_of_hole])
         poop_case = Inference([InferenceEngine.is_pooped], [InferenceEngine.mark_neighbors_risky_of_monster])
-        area_cleaned = Inference([InferenceEngine.is_risky_of_monster, InferenceEngine.threw_stone_on_neighbor],
+        area_cleaned = Inference([InferenceEngine.is_pooped, InferenceEngine.threw_stone_on_neighbor],
                                  [InferenceEngine.mark_neighbor_safe_of_monster])
         # gate_case = Inference([InferenceEngine.has_portal], [InferenceEngine.take_portal])
 
