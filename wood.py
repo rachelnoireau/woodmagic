@@ -8,8 +8,8 @@ class Wood:
 	PROB_MONSTER = 0.2
 	PROB_HOLE = 0.2
 
-	def __init__(self,size):
-		self.perf = 0;
+	def __init__(self, size):
+		self.perf = 0
 		self.size = size
 		self.grid = [[Area(x, y) for x in range(self.size)] for y in range(self.size)]
 
@@ -26,10 +26,6 @@ class Wood:
 						if not(self.generate_monster(i,j)):
 							self.generate_hole(i,j)
 
-	
-	#def cristal_taken(self, posx,posy):
-	#	self.grid[posx][posy].take_cristal()
-		
 	def use_cristal(self, posx, posy):
 		self.grid[posx][posy].cristal_use()
 		
@@ -70,10 +66,6 @@ class Wood:
 			if(posy<self.size-1):
 				self.grid[posx][posy+1].set_next_to_hole()
 
-	#def generate_cristal(self, posx, posy):
-	#	if (random.random() < self.PROB_CRISTAL):
-	#		self.grid[posx][posy].set_cristal()
-
 	def performance(area,agent, self):
 		if(area.is_monster == True or area.is_hole == True):
 			self.perf = self.perf - 10 * self.size
@@ -88,3 +80,6 @@ class Wood:
 		if x < 0 or x >= self.size or y < 0 or y >= self.size:
 			return None
 		return self.grid[y][x]
+
+	def move_up(self):
+		return None

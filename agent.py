@@ -2,6 +2,7 @@ from enum import Enum
 from area import Area
 import math
 
+
 class Action(Enum):
     UP = 1
     RIGHT = 2
@@ -18,6 +19,7 @@ class Agent:
         self.posX = 0
         self.posY = 0
         self.nbr_dead = 0
+        self.wood = wood
 
         self.inference_engine = inference_engine
         self.next_area_to_visit = None
@@ -26,14 +28,47 @@ class Agent:
 
         # Frontier is split between safe areas, one array for potential monster, one for potential holes
         self.frontier = [[], [], []]
-        self.current_area = wood.get_area_at_position(self.posX, self.posY)
+        self.current_area = self.wood.get_area_at_position(self.posX, self.posY)
         self.target_area = None
 
         self.level = 0    #the size 3*3 ici level 0
         self.action = Action
 
     def execute_action(self):
-        # self.next_action.execute()
+        # self.action_queue.put(self.next_action)
+        if self.next_action == Action.UP:
+            self.move_to(self.current_area.up_neighbour)
+        elif self.next_action == Action.DOWN:
+            self.move_to(self.current_area.down_neighbour)
+        elif self.next_action == Action.RIGHT:
+            self.move_to(self.current_area.right_neighbour)
+        elif self.next_action == Action.LEFT:
+            self.move_to(self.current_area.left_neighbour)
+        elif self.next_action == Action.USE_CRISTAL:
+            self.target_area.received_cristal()
+        elif self.next_action == Action.TAKE_PORTAL:
+            self.take_portal()
+
+        action_performed = self.next_action
+        self.next_action = None
+        self.performance = self.update_performance()
+        return action_performed
+
+    def move_to(self, area):
+        if not area:
+            print("Error, tried to move where there is no area")
+            return
+        self.visited_areas.append(self.current_area)
+        self.current_area = area
+        self.posX = area
+        self.posY = area
+        # TODO: Remove this area from frontier if it's in
+
+    def take_portal(self):
+        if self.current_area.is_cristal:
+            self.level += 1
+
+    def update_performance(self):
         return None
 
     def plan_next_action(self):
@@ -108,8 +143,6 @@ class Agent:
 
     def get_pos(self):
         return (self.posX , self.posY)
-
-
 
     #Pour aller de position a next_visited_area
     def short_way(self):

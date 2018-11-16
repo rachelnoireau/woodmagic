@@ -88,7 +88,7 @@ class Area:
 	def receive_stone(self):
 		self.__received_stone = True
 
-	def received_stone(self):
+	def received_cristal(self):
 		return self.__received_stone
 
 	def mark_safe(self):

@@ -84,12 +84,6 @@ class Display:
             cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
                             area.posY * self.CELL_SIZE + 1,
                             anchor=NW, image=self.portal_photo)
-        '''
-        if area.is_cristal:
-            cv.create_image(area.posX * self.CELL_SIZE + self.CELL_SIZE / 2 - 1,
-                            area.posY * self.CELL_SIZE + 1,
-                            anchor=NW, image=self.cristal_photo)
-        '''
 
         cv.grid(row=area.posX, column=area.posY)
 
@@ -103,14 +97,13 @@ class Display:
     def callAct(self):
 
         self.agent.plan_next_action()
-        self.agent.execute_action()
+        actionPerformed = self.agent.execute_action()
 
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
         self.updateWindow()
         self.window.update()
-
 
         if self.willDie():
             self.agent.is_dead()
@@ -154,6 +147,10 @@ class Display:
         Button(text ="next action", command = self.callAct).grid(sticky=S)
 
     def draw_agent(self, cv):
+        print("Agent pos")
+        print(self.agent_pos)
+        print(self.CELL_SIZE)
+        print(type(self.agent_pos[0]))
         x_agent = int(1 + self.CELL_SIZE * self.agent_pos[0])
         y_agent = int(1 + self.CELL_SIZE * self.agent_pos[1])
         #resize the image
@@ -163,8 +160,6 @@ class Display:
         hero_photo = hero_photo.zoom(1).subsample(int(scale_w)+1, int(scale_h)+1)
         self.agent_image = cv.create_image(x_agent, y_agent, anchor=NW, image=self.hero_photo)
         cv.grid(row=1, column=x_agent - 1)
-
-
 
     def on_closing(self):
         self.window.destroy()
