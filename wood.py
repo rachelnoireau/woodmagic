@@ -32,6 +32,7 @@ class Wood:
 	def get_grid(self):
 		return self.grid
 	
+	#give random position to portal
 	def situate_portal(self):
 		posx = random.randint(0, self.size-1)
 		posy = random.randint(0, self.size-1)
@@ -39,7 +40,8 @@ class Wood:
 			self.situate_portal()
 		else:
 			self.grid[posy][posx].set_portal()
-		
+	
+	#give random position to monster, 
 	def generate_monster(self, posx, posy):
 		if (random.random() < self.PROB_MONSTER):
 			self.grid[posy][posx].set_monster()
@@ -53,7 +55,8 @@ class Wood:
 				self.grid[posy][posx+1].set_next_to_monster()
 			return True
 		return False
-				
+	
+	#give random position to hole, and put wind next to it 
 	def generate_hole(self, posx, posy):
 		if (random.random() < self.PROB_HOLE):
 			self.grid[posy][posx].set_hole()
@@ -65,16 +68,17 @@ class Wood:
 				self.grid[posy][posx-1].set_next_to_hole()
 			if(posx<self.size-1):
 				self.grid[posy][posx+1].set_next_to_hole()
-
+	
+	#give a score to agent
 	def performance(area,agent, self):
 		if(area.is_monster == True or area.is_hole == True):
-			self.perf = self.perf - 10 * self.size
+			self.perf = self.perf - 10 * self.size #the more grill is big the more it is difficulte to found the portal
 		elif (area.is_portal == True):
 			self.perf = self.perf + 10 * self.size
 		elif (agent.action ==  'USE_CRISTAL'):
-			self.perf = self.perf - 10
+			self.perf = self.perf - 10 #lose a cristal
 		else :
-			self.perf = self.perf - 1
+			self.perf = self.perf - 1 #it take time to find the portal
 
 	def get_area_at_position(self, x, y):
 		if x < 0 or x >= self.size or y < 0 or y >= self.size:
