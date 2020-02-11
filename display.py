@@ -2,7 +2,7 @@ from tkinter import *
 import sys
 import os
 
-import time
+import time # to have time to see what happend
 from agent import Action
 from wood import Wood
 
@@ -24,7 +24,7 @@ class Display:
         self.window.title("Magic Wood")
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-        #self.cristal_photo = PhotoImage(file=self.resource_path("img/cristal.png"))
+        #get all pictures
         self.hero_photo = PhotoImage(file=self.resource_path("img/hero.png"))
         self.hole_photo = PhotoImage(file=self.resource_path("img/hole.png"))
         self.monster_photo = PhotoImage(file=self.resource_path("img/monster.png"))
@@ -37,7 +37,8 @@ class Display:
         self.create_button()
 
         self.start_loop()
-
+    
+    #draw the map
     def add_grid(self, grid):
         self.window.grid_size()
         self.grid = grid
@@ -56,7 +57,7 @@ class Display:
 
         if area.is_next_to_monster:
             self.cv.create_image(area.posX * self.CELL_SIZE + 1,
-                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2,
+                            area.posY * self.CELL_SIZE + self.CELL_SIZE / 2, #give to each objet a different possition on area to saw them all at same time
                             anchor=NW, image=self.pooh_photo)
 
         if area.is_monster:
@@ -82,17 +83,12 @@ class Display:
         self.cv.grid(row=area.posX, column=area.posY)
 
     def will_die(self):
-        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster():
-            return True
-        if self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_hole():
-            return True
-        return False
+        return (self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_monster() and  self.grid[self.agent.get_pos()[1]][self.agent.get_pos()[0]].get_hole()  )
 
     def call_act(self):
         self.agent.plan_next_action()
         action_performed = self.agent.execute_action()
-        print(action_performed)
-
+        
         if not(self.agent_pos == self.agent.get_pos()):
             self.agent_pos = self.agent.get_pos()
 
@@ -111,12 +107,11 @@ class Display:
         if self.agent.next_area_to_visit.is_monster and action_performed == Action.USE_CRISTAL:
             print("Killing monster at ", self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
             self.agent.next_area_to_visit.kill_monster()
-            # pos_direction_cristal = (self.agent.next_area_to_visit.posX, self.agent.next_area_to_visit.posY)
-            # self.grid[ pos_direction_cristal[1]][ pos_direction_cristal[0]].kill_monster()
 
             time.sleep(2)
             self.update_window()
-
+           
+        #level win go to next level
         if self.agent.current_area.get_portal() and action_performed == Action.TAKE_PORTAL:
             self.agent.next_level()
             self.agent.set_pos(0, 0)
@@ -129,7 +124,8 @@ class Display:
 
             time.sleep(2)
             self.update_window()
-
+   
+    #update the map
     def update_window(self):
             self.cv.delete("all")
             self.add_grid(self.wood.get_grid())
@@ -147,7 +143,7 @@ class Display:
         scale_h = (self.hero_photo.height() / self.CELL_SIZE)*2
         hero_photo = hero_photo.zoom(1).subsample(int(scale_w)+1, int(scale_h)+1)
         self.agent_image = self.cv.create_image(x_agent, y_agent, anchor=NW, image=self.hero_photo)
-        self.cv.grid(row=1, column=0)#x_agent - 1
+        self.cv.grid(row=1, column=0)
 
     def on_closing(self):
         self.window.destroy()
